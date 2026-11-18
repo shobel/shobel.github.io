@@ -7,7 +7,7 @@
 <meta name="description" content="Serenity Rising: Idle RPG. Summon heroes, slay bosses. Free on the App Store.">
 <meta property="og:title" content="Serenity Rising: Idle RPG">
 <meta property="og:description" content="Summon heroes, slay bosses. Free on the App Store.">
-<meta property="og:image" content="https://shobelgames.com/img/hero.webp">
+<meta property="og:image" content="https://shobelgames.com/img/hero_wide.webp">
 <meta name="theme-color" content="#140c22">
 <meta name="apple-itunes-app" content="app-id=6829385460">
 <link rel="icon" href="/img/icon.webp">
@@ -60,16 +60,25 @@
   .scroll-cue::after { content: ""; position: absolute; left: 50%; top: 6px; width: 3px; height: 7px; margin-left: -1.5px;
     border-radius: 2px; background: var(--cream); animation: cue 1.8s ease-in-out infinite; }
   @keyframes cue { 0% { opacity: 0; transform: translateY(0); } 40% { opacity: 1; } 100% { opacity: 0; transform: translateY(12px); } }
+  .wide { display: none; }
   @media (min-width: 900px) {
-    .hero { grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); align-content: center; align-items: center; column-gap: 2vw;
-      max-width: none; padding-block: 0; }
-    .art-wrap { width: auto; height: 100svh; margin: 0; justify-self: end; }
-    .art { -webkit-mask-image: linear-gradient(90deg, transparent 0, #000 16%, #000 80%, transparent 100%), linear-gradient(180deg, #000 80%, transparent);
-           -webkit-mask-composite: source-in; mask-image: linear-gradient(90deg, transparent 0, #000 16%, #000 80%, transparent 100%), linear-gradient(180deg, #000 80%, transparent);
-           mask-composite: intersect; }
-    .hero-inner { margin-top: 0; justify-self: start; }
-    .logo { width: min(480px, 36vw); }
+    .hero { display: flex; align-items: center; justify-content: flex-start; min-height: 100svh;
+      padding: 0 max(4vw, env(safe-area-inset-right)) 0 max(6vw, env(safe-area-inset-left)); }
+    .hero .wash, .art-wrap { display: none; }
+    .wide { display: block; position: absolute; inset: 0; z-index: -3; width: 100%; height: 100%; object-fit: cover;
+      object-position: 78% 46%; animation: widedrift 22s ease-in-out infinite alternate; transform-origin: 78% 30%; }
+    .wide-glow { display: none !important; }
+    @keyframes widedrift { from { transform: scale(1); } to { transform: scale(1.05); } }
+    .hero::before { content: ""; position: absolute; inset: 0; z-index: -2; pointer-events: none;
+      background: linear-gradient(90deg, rgba(20,12,34,.55) 0%, rgba(20,12,34,.25) 30%, transparent 50%); }
+    .hero::after { height: 180px; }
+    .wide-glow { display: block; position: absolute; z-index: -2; left: 78.5%; top: 26%; width: 34vmin; aspect-ratio: 1;
+      transform: translate(-50%, -50%); background: radial-gradient(circle, rgba(255,220,150,.55), rgba(255,170,80,.12) 45%, transparent 70%);
+      mix-blend-mode: screen; animation: pulse 4s ease-in-out infinite; pointer-events: none; }
+    .hero-inner { margin: 0; width: min(500px, 40vw); }
+    .logo { width: 100%; }
   }
+  .wide-glow { display: none; }
 
   /* ── gameplay: video + fanned shots ───────────── */
   .play { position: relative; padding: 64px max(16px, env(safe-area-inset-right)) 40px max(16px, env(safe-area-inset-left));
@@ -125,6 +134,8 @@
 <body>
 
 <section class="hero">
+  <img class="wide" src="img/hero_wide.webp" alt="" fetchpriority="high">
+  <div class="wide-glow"></div>
   <div class="wash"></div>
   <div class="embers" id="embers"></div>
   <div class="art-wrap">
