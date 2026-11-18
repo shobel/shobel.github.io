@@ -2,27 +2,215 @@
 <html lang="en">
 <head>
 <meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Shobel Games</title>
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Serenity Rising — Shobel Games</title>
+<meta name="description" content="Serenity Rising: Idle RPG. Summon heroes, slay bosses. Free on the App Store.">
+<meta property="og:title" content="Serenity Rising: Idle RPG">
+<meta property="og:description" content="Summon heroes, slay bosses. Free on the App Store.">
+<meta property="og:image" content="https://shobelgames.com/img/hero.webp">
+<meta name="theme-color" content="#140c22">
+<meta name="apple-itunes-app" content="app-id=6829385460">
+<link rel="icon" href="/img/icon.webp">
+<link rel="apple-touch-icon" href="/img/icon.webp">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Grenze+Gotisch:wght@500;700&display=swap">
 <style>
-  :root { --bg: #ffffff; --fg: #1d1d1f; --muted: #6e6e73; --line: #e5e5ea; }
-  @media (prefers-color-scheme: dark) { :root { --bg: #111114; --fg: #f2f2f7; --muted: #a1a1a6; --line: #2c2c30; } }
-  body { margin: 0; background: var(--bg); color: var(--fg); font: 16px/1.6 -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; }
-  main { max-width: 720px; margin: 0 auto; padding: 48px 16px 64px; }
-  h1 { font-size: 28px; margin: 0 0 4px; }
-  h2 { font-size: 19px; margin: 32px 0 8px; padding-top: 16px; border-top: 1px solid var(--line); }
-  .muted { color: var(--muted); }
+  :root {
+    --night: #140c22; --dusk: #2a1840; --plum: #4a2a5e; --ember: #ff9a4d; --gold: #f5c76a; --cream: #f6ead8;
+    --muted: #b8a6c9; color-scheme: dark;
+  }
+  * { box-sizing: border-box; }
+  html { scroll-behavior: smooth; }
+  body { margin: 0; background: var(--night); color: var(--cream); overflow-x: hidden;
+    font: 16px/1.5 -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; }
   a { color: inherit; }
+  .gothic { font-family: "Grenze Gotisch", Georgia, serif; font-weight: 700; letter-spacing: .01em; }
+
+  /* ── hero ─────────────────────────────────────── */
+  .hero { position: relative; min-height: 100svh; overflow: hidden; isolation: isolate; display: grid;
+    grid-template-columns: 1fr; align-content: start; justify-items: center;
+    padding: 0 max(16px, env(safe-area-inset-right)) max(40px, env(safe-area-inset-bottom)) max(16px, env(safe-area-inset-left)); }
+  .hero .wash { position: absolute; inset: -60px; z-index: -3; background: url(img/hero.webp) center 30% / cover;
+    filter: blur(60px) saturate(1.1) brightness(.34); transform: scale(1.2); }
+  .hero::after { content: ""; position: absolute; left: 0; right: 0; bottom: 0; height: 140px; z-index: -1;
+    background: linear-gradient(180deg, transparent, var(--night)); pointer-events: none; }
+  .art-wrap { position: relative; width: min(100vw, 560px); margin: 0 calc(-1 * max(16px, env(safe-area-inset-left))); aspect-ratio: 2 / 3; }
+  .art { width: 100%; height: 100%; object-fit: cover; display: block;
+    -webkit-mask-image: linear-gradient(180deg, #000 62%, transparent 98%);
+            mask-image: linear-gradient(180deg, #000 62%, transparent 98%);
+    animation: drift 18s ease-in-out infinite alternate; transform-origin: 50% 30%; }
+  @keyframes drift { from { transform: scale(1); } to { transform: scale(1.05); } }
+  .glow { position: absolute; left: 50.3%; top: 33%; width: 60%; aspect-ratio: 1; transform: translate(-50%, -50%);
+    background: radial-gradient(circle, rgba(255,220,150,.6), rgba(255,170,80,.14) 45%, transparent 70%);
+    mix-blend-mode: screen; animation: pulse 4s ease-in-out infinite; pointer-events: none; }
+  @keyframes pulse { 0%,100% { opacity: .5; transform: translate(-50%,-50%) scale(.9); } 50% { opacity: 1; transform: translate(-50%,-50%) scale(1.08); } }
+  .embers { position: absolute; inset: 0; z-index: -1; pointer-events: none; }
+  .embers i { position: absolute; bottom: -10px; width: 4px; height: 4px; border-radius: 50%; background: var(--ember);
+    box-shadow: 0 0 8px 2px rgba(255,150,70,.8); opacity: 0; animation: rise linear infinite; }
+  @keyframes rise { 0% { opacity: 0; transform: translate(0,0); } 10% { opacity: .9; }
+    100% { opacity: 0; transform: translate(var(--dx), -95vh); } }
+  .hero-inner { display: grid; justify-items: center; gap: 16px; text-align: center; margin-top: -18%; position: relative; }
+  .logo { width: min(380px, 70vw); height: auto; filter: drop-shadow(0 10px 40px rgba(0,0,0,.7)); }
+  .tag { margin: -4px 0 2px; font-size: clamp(22px, 3vw, 30px); color: var(--gold); text-shadow: 0 2px 12px rgba(0,0,0,.8); }
+  .badge { display: inline-block; transition: transform .2s; }
+  .badge:hover { transform: translateY(-2px) scale(1.03); }
+  .badge img { height: 56px; width: auto; display: block; }
+  .scroll-cue { margin-top: 8px; width: 22px; height: 34px; border: 2px solid rgba(246,234,216,.45); border-radius: 12px; position: relative; }
+  .scroll-cue::after { content: ""; position: absolute; left: 50%; top: 6px; width: 3px; height: 7px; margin-left: -1.5px;
+    border-radius: 2px; background: var(--cream); animation: cue 1.8s ease-in-out infinite; }
+  @keyframes cue { 0% { opacity: 0; transform: translateY(0); } 40% { opacity: 1; } 100% { opacity: 0; transform: translateY(12px); } }
+  @media (min-width: 900px) {
+    .hero { grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); align-content: center; align-items: center; column-gap: 2vw;
+      max-width: none; padding-block: 0; }
+    .art-wrap { width: auto; height: 100svh; margin: 0; justify-self: end; }
+    .art { -webkit-mask-image: linear-gradient(90deg, transparent 0, #000 16%, #000 80%, transparent 100%), linear-gradient(180deg, #000 80%, transparent);
+           -webkit-mask-composite: source-in; mask-image: linear-gradient(90deg, transparent 0, #000 16%, #000 80%, transparent 100%), linear-gradient(180deg, #000 80%, transparent);
+           mask-composite: intersect; }
+    .hero-inner { margin-top: 0; justify-self: start; }
+    .logo { width: min(480px, 36vw); }
+  }
+
+  /* ── gameplay: video + fanned shots ───────────── */
+  .play { position: relative; padding: 64px max(16px, env(safe-area-inset-right)) 40px max(16px, env(safe-area-inset-left));
+    background: radial-gradient(ellipse 70% 60% at 50% 40%, var(--plum) 0, transparent 70%); }
+  .stage { max-width: 1100px; margin: 0 auto; display: flex; align-items: center; justify-content: center; gap: 0; }
+  .phone { position: relative; z-index: 2; width: min(300px, 74vw); aspect-ratio: 886 / 1920; border-radius: 38px; padding: 10px;
+    background: linear-gradient(160deg, #3a2a4c, #120a1c); box-shadow: 0 0 0 2px rgba(245,199,106,.35), 0 30px 80px rgba(0,0,0,.7), 0 0 120px rgba(255,154,77,.18); }
+  .phone video { width: 100%; height: 100%; object-fit: cover; border-radius: 30px; display: block; background: #000; }
+  .fan { width: min(220px, 22vw); aspect-ratio: 1320 / 2868; border-radius: 22px; object-fit: cover;
+    box-shadow: 0 20px 60px rgba(0,0,0,.65), 0 0 0 1px rgba(245,199,106,.25); transition: transform .4s; }
+  .fan.l { transform: rotate(-8deg) translateX(40px) translateY(20px); }
+  .fan.r { transform: rotate(8deg) translateX(-40px) translateY(20px); }
+  .fan.l2 { transform: rotate(-15deg) translateX(110px) translateY(60px); width: min(190px, 19vw); opacity: .8; }
+  .fan.r2 { transform: rotate(15deg) translateX(-110px) translateY(60px); width: min(190px, 19vw); opacity: .8; }
+  .stage:hover .fan.l { transform: rotate(-10deg) translateX(20px) translateY(16px); }
+  .stage:hover .fan.r { transform: rotate(10deg) translateX(-20px) translateY(16px); }
+  @media (max-width: 760px) { .fan { display: none; } }
+
+  /* ── screenshot strip ─────────────────────────── */
+  .strip-wrap { padding: 48px 0 72px; }
+  .strip-title { text-align: center; font-size: clamp(34px, 6vw, 56px); margin: 0 0 28px; color: var(--cream);
+    text-shadow: 0 0 30px rgba(255,154,77,.35); }
+  .strip { display: flex; gap: 22px; overflow-x: auto; scroll-snap-type: x mandatory; scrollbar-width: none;
+    padding: 10px max(16px, env(safe-area-inset-right)) 24px max(16px, env(safe-area-inset-left)); }
+  .strip::-webkit-scrollbar { display: none; }
+  .strip::before, .strip::after { content: ""; flex: 0 0 max(0px, calc((100vw - 1180px) / 2)); }
+  .shot { flex: 0 0 auto; width: min(240px, 62vw); scroll-snap-align: center; margin: 0; }
+  .shot img { width: 100%; aspect-ratio: 1320 / 2868; object-fit: cover; border-radius: 20px; display: block;
+    box-shadow: 0 16px 40px rgba(0,0,0,.55), 0 0 0 1px rgba(245,199,106,.2); transition: transform .3s, box-shadow .3s; }
+  .shot:hover img { transform: translateY(-6px); box-shadow: 0 24px 60px rgba(0,0,0,.6), 0 0 0 1px rgba(245,199,106,.6), 0 0 40px rgba(255,154,77,.25); }
+  .shot figcaption { margin-top: 12px; text-align: center; font-size: 22px; color: var(--gold); }
+  .arrows { display: flex; justify-content: center; gap: 12px; margin-top: 4px; }
+  .arrows button { width: 44px; height: 44px; border-radius: 50%; border: 1px solid rgba(245,199,106,.45); background: rgba(74,42,94,.5);
+    color: var(--gold); font-size: 20px; cursor: pointer; transition: background .2s; }
+  .arrows button:hover { background: rgba(74,42,94,.9); }
+
+  /* ── closing call + footer ────────────────────── */
+  .cta { position: relative; text-align: center; padding: 80px 16px 90px; overflow: hidden; isolation: isolate; }
+  .cta::before { content: ""; position: absolute; inset: 0; z-index: -1; background: url(img/hero.webp) center 18% / cover;
+    filter: brightness(.35) saturate(1.2); -webkit-mask-image: linear-gradient(180deg, transparent, #000 30%, #000 70%, transparent);
+    mask-image: linear-gradient(180deg, transparent, #000 30%, #000 70%, transparent); }
+  .cta .icon { width: 112px; height: 112px; border-radius: 26px; box-shadow: 0 12px 40px rgba(0,0,0,.6), 0 0 60px rgba(255,154,77,.3); }
+  .cta h2 { font-size: clamp(36px, 6vw, 60px); margin: 18px 0 20px; line-height: 1.05; text-wrap: balance; }
+  footer { border-top: 1px solid rgba(184,166,201,.18); color: var(--muted); font-size: 14px;
+    padding: 24px max(16px, env(safe-area-inset-right)) max(28px, env(safe-area-inset-bottom)) max(16px, env(safe-area-inset-left)); }
+  footer .row { max-width: 1100px; margin: 0 auto; display: flex; flex-wrap: wrap; gap: 10px 24px; justify-content: space-between; align-items: center; }
+  footer .studio { font-size: 22px; color: var(--cream); }
+  footer nav { display: flex; gap: 20px; flex-wrap: wrap; }
+  footer nav a { text-decoration: none; } footer nav a:hover { color: var(--gold); }
+  @media (prefers-reduced-motion: reduce) { *, *::before, *::after { animation: none !important; transition: none !important; } }
 </style>
 </head>
 <body>
-<main>
-<h1>Shobel Games</h1>
-<p class="muted">Games by Shobel LLC</p>
-<h2>Serenity Rising: Idle RPG</h2>
-<p><a href="https://apps.apple.com/app/id6829385460">Download on the App Store</a> · <a href="/damage-lab-legal/">Privacy Policy</a></p>
-<h2>Support</h2>
-<p>Questions or problems: <a href="mailto:shobelllc@gmail.com">shobelllc@gmail.com</a></p>
-</main>
+
+<section class="hero">
+  <div class="wash"></div>
+  <div class="embers" id="embers"></div>
+  <div class="art-wrap">
+    <img class="art" src="img/hero.webp" alt="Seren raising a glowing sword over ruined arches at dusk">
+    <div class="glow"></div>
+  </div>
+  <div class="hero-inner">
+    <img class="logo" src="img/logo.webp" alt="Serenity Rising" width="760" height="711">
+    <p class="tag gothic">Summon heroes. Slay bosses.</p>
+    <a class="badge" href="https://apps.apple.com/app/id6829385460"><img src="img/app-store-badge.svg" alt="Download on the App Store"></a>
+    <a href="#play" class="scroll-cue" aria-label="Scroll down"></a>
+  </div>
+</section>
+
+<section class="play" id="play">
+  <div class="stage">
+    <img class="fan l2" src="img/05_champions.webp" alt="" loading="lazy">
+    <img class="fan l" src="img/04_world_boss.webp" alt="" loading="lazy">
+    <div class="phone">
+      <video src="img/preview.mp4" poster="img/preview_poster.jpg" autoplay muted loop playsinline preload="metadata"></video>
+    </div>
+    <img class="fan r" src="img/07_dungeon.webp" alt="" loading="lazy">
+    <img class="fan r2" src="img/06_gear.webp" alt="" loading="lazy">
+  </div>
+</section>
+
+<section class="strip-wrap" id="shots">
+  <h2 class="strip-title gothic">Your legend starts here</h2>
+  <div class="strip" id="strip">
+    <figure class="shot"><img src="img/01_forge.webp" alt="" loading="lazy"><figcaption class="gothic">Forge a legendary blade</figcaption></figure>
+    <figure class="shot"><img src="img/03_camp.webp" alt="" loading="lazy"><figcaption class="gothic">Build your mining camp</figcaption></figure>
+    <figure class="shot"><img src="img/02_stage_boss.webp" alt="" loading="lazy"><figcaption class="gothic">Slay giant bosses</figcaption></figure>
+    <figure class="shot"><img src="img/05_champions.webp" alt="" loading="lazy"><figcaption class="gothic">Summon champions</figcaption></figure>
+    <figure class="shot"><img src="img/06_gear.webp" alt="" loading="lazy"><figcaption class="gothic">Gear up</figcaption></figure>
+    <figure class="shot"><img src="img/04_world_boss.webp" alt="" loading="lazy"><figcaption class="gothic">Take on the World Boss</figcaption></figure>
+    <figure class="shot"><img src="img/07_dungeon.webp" alt="" loading="lazy"><figcaption class="gothic">Raid dungeons</figcaption></figure>
+    <figure class="shot"><img src="img/08_trials.webp" alt="" loading="lazy"><figcaption class="gothic">Climb the Trials</figcaption></figure>
+    <figure class="shot"><img src="img/09_army.webp" alt="" loading="lazy"><figcaption class="gothic">Lead an army</figcaption></figure>
+  </div>
+  <div class="arrows">
+    <button type="button" aria-label="Previous" data-dir="-1">&#8592;</button>
+    <button type="button" aria-label="Next" data-dir="1">&#8594;</button>
+  </div>
+</section>
+
+<section class="cta" id="get">
+  <img class="icon" src="img/icon.webp" alt="" width="112" height="112">
+  <h2 class="gothic">Play free on iPhone</h2>
+  <a class="badge" href="https://apps.apple.com/app/id6829385460"><img src="img/app-store-badge.svg" alt="Download on the App Store"></a>
+</section>
+
+<footer>
+  <div class="row">
+    <span class="studio gothic">Shobel Games</span>
+    <nav>
+      <a href="/damage-lab-legal/">Privacy Policy</a>
+      <a href="mailto:shobelllc@gmail.com">Support: shobelllc@gmail.com</a>
+    </nav>
+    <span>© 2026 Shobel LLC</span>
+  </div>
+</footer>
+
+<script>
+  // embers rising past the sword
+  (function () {
+    var box = document.getElementById('embers'); if (!box) return;
+    var n = window.innerWidth < 600 ? 18 : 34;
+    for (var i = 0; i < n; i++) {
+      var e = document.createElement('i'); var s = 2 + Math.random() * 4;
+      e.style.left = (Math.random() * 100) + '%'; e.style.width = e.style.height = s + 'px';
+      e.style.setProperty('--dx', ((Math.random() - .5) * 160) + 'px');
+      e.style.animationDuration = (7 + Math.random() * 9) + 's';
+      e.style.animationDelay = (-Math.random() * 14) + 's';
+      box.appendChild(e);
+    }
+  })();
+  // carousel arrows
+  (function () {
+    var strip = document.getElementById('strip');
+    document.querySelectorAll('.arrows button').forEach(function (b) {
+      b.addEventListener('click', function () {
+        var w = strip.querySelector('.shot').getBoundingClientRect().width + 22;
+        strip.scrollBy({ left: w * Number(b.dataset.dir), behavior: 'smooth' });
+      });
+    });
+  })();
+</script>
 </body>
 </html>
